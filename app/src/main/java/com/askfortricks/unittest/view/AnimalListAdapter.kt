@@ -3,6 +3,7 @@ package com.askfortricks.unittest.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.askfortricks.unittest.R
 import com.askfortricks.unittest.util.getProgressDrawable
@@ -26,6 +27,11 @@ class AnimalListAdapter(val animalList:ArrayList<Animal>):RecyclerView.Adapter<A
             getProgressDrawable(
                 holder.itemView.context
             ),animalList[position].imageUrl)
+
+        holder.itemView.animalLayout.setOnClickListener {
+            val action=ListFragmentDirections.actionDetail(animalList[position])
+            Navigation.findNavController(holder.itemView).navigate(action)
+        }
     }
 
     fun updateAnimalList(newAnimalList:List<Animal>){
