@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.askfortricks.unittest.model.Animal
 import com.askfortricks.unittest.model.ApiKey
 import com.askfortricks.unittest.retrofit.AnimalApiService
+import com.askfortricks.unittest.util.SharedPreferenceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableCompletableObserver
@@ -17,6 +18,10 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     val loadError by lazy { MutableLiveData<Boolean>() }
     val loading by lazy { MutableLiveData<Boolean>() }
 
+    //create shared pref instance
+    val prefs = SharedPreferenceHelper(getApplication())
+
+    //create disposable and release it later in onCleared
     private val disposable = CompositeDisposable()
 
     //create api service
@@ -24,9 +29,19 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
     fun refresh() {
         loading.value=true
-        getKey()
+        if(prefs.getApiKey().isNullOrEmpty()){
+            getKey()
+        }
+        else{
+            getAnimals(prefs.getApiKey())
+        }
     }
 
+    //called from swipe refresh
+    fun forceRefresh(){
+        loading.value=true
+        getKey()
+    }
     //first call this method to call api
     fun getKey() {
         disposable.add(
@@ -39,6 +54,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                             loading.value=false
                         }
                         else{
+                            prefs.saveApiKey(keyObject.key)
                             loadError.value=false
                             loading.value=false
                             getAnimals(keyObject.key)
@@ -55,7 +71,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
         )
     }
 
-    private fun getAnimals(apiKey: String) {
+    private fun getAnimals(apiKey: String?) {
         disposable.add(
             api.getAnimals(apiKey)
                 .subscribeOn(Schedulers.newThread())
