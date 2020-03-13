@@ -59,9 +59,9 @@ class ListFragment : Fragment() {
         //creating viewmodel
         viewModel=ViewModelProviders.of(this).get(ListViewModel::class.java)
         //observer assignment
-        viewModel.animals.observe(this,animalListDataObserver)
-        viewModel.loading.observe(this,loadingLiveDataObserver)
-        viewModel.loadError.observe(this,loadingErrorDataObserver)
+        viewModel.animals.observe(viewLifecycleOwner,animalListDataObserver)
+        viewModel.loading.observe(viewLifecycleOwner,loadingLiveDataObserver)
+        viewModel.loadError.observe(viewLifecycleOwner,loadingErrorDataObserver)
         viewModel.refresh()
 
         animalList.apply {
@@ -74,7 +74,7 @@ class ListFragment : Fragment() {
             listError.visibility= GONE
             loadingView.visibility=View.VISIBLE
 
-            viewModel.refresh()
+            viewModel.forceRefresh()
 
             refreshLayout.isRefreshing=false
         }
