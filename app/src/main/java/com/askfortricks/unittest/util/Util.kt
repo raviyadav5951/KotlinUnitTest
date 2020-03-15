@@ -2,6 +2,7 @@ package com.askfortricks.unittest.util
 
 import android.content.Context
 import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.askfortricks.unittest.R
 import com.bumptech.glide.Glide
@@ -28,3 +29,9 @@ fun ImageView.loadImage(circularProgressDrawable: CircularProgressDrawable, uri:
         .into(this)
 
 }
+
+@BindingAdapter("android:imageurl")
+fun loadImage(view:ImageView,url: String?){
+    view.loadImage(getProgressDrawable(view.context),url)
+}
+
