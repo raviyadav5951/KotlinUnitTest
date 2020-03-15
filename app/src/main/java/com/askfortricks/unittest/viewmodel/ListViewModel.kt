@@ -3,6 +3,7 @@ package com.askfortricks.unittest.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import com.askfortricks.unittest.di.DaggerViewModelComponent
 import com.askfortricks.unittest.model.Animal
 import com.askfortricks.unittest.model.ApiKey
 import com.askfortricks.unittest.retrofit.AnimalApiService
@@ -12,6 +13,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
     val animals by lazy { MutableLiveData<List<Animal>>() }
@@ -25,7 +27,12 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     private val disposable = CompositeDisposable()
 
     //create api service
-    private val api = AnimalApiService()
+    @Inject
+    lateinit var api: AnimalApiService
+
+    init {
+        DaggerViewModelComponent.create().inject(this)
+    }
 
     fun refresh() {
         loading.value=true
