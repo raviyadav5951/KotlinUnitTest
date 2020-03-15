@@ -1,52 +1,66 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/animalDetailLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.askfortricks.unittest.view.DetailFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/animalImage"
+    <data>
+
+        <variable
+            name="animal"
+            type="com.askfortricks.unittest.model.Animal" />
+
+        <variable
+            name="palette"
+            type="com.askfortricks.unittest.model.AnimalPalette" />
+    </data>
+
+    <LinearLayout
+        android:background="@{palette.color}"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="center" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.askfortricks.unittest.view.DetailFragment">
 
-    <TextView
-        android:id="@+id/animalName"
-        style="@style/Title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        tools:text="Animal Name" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:imageurl="@{animal.imageUrl}"
+            android:scaleType="center" />
 
-    <TextView
-        android:id="@+id/animalLocation"
-        style="@style/Text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        tools:text="Animal Location" />
+        <TextView
+            style="@style/Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{animal.name}"
+            tools:text="Animal Name" />
 
-    <TextView
-        android:id="@+id/animalLifespan"
-        style="@style/Text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        tools:text="Animal Lifespan" />
+        <TextView
+            style="@style/Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="@{animal.location}"
+            tools:text="Animal Location" />
 
-    <TextView
-        android:id="@+id/animalDiet"
-        style="@style/Text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center"
-        tools:text="Animal Diet" />
+        <TextView
+            style="@style/Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="@{animal.lifeSpan}"
+            tools:text="Animal Lifespan" />
+
+        <TextView
+            style="@style/Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="@{animal.diet}"
+            tools:text="Animal Diet" />
 
 
-</LinearLayout>
+    </LinearLayout>
+</layout>

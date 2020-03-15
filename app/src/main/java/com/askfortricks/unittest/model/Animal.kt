@@ -118,4 +118,7 @@ data class Speed(
             return arrayOfNulls(size)
         }
     }
+
+
 }
+data class AnimalPalette(var color:Int)
