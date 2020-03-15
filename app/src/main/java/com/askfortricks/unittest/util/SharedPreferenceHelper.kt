@@ -1,7 +1,7 @@
 package com.askfortricks.unittest.util
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 
 class SharedPreferenceHelper(context: Context) {
     private val PREF_API_KEY = "Api-key"

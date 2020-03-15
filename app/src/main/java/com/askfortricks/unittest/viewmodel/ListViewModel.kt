@@ -3,6 +3,10 @@ package com.askfortricks.unittest.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import com.askfortricks.unittest.di.AppModule
+import com.askfortricks.unittest.di.CONTEXT_APP
+import com.askfortricks.unittest.di.DaggerViewModelComponent
+import com.askfortricks.unittest.di.TypeOfContext
 import com.askfortricks.unittest.model.Animal
 import com.askfortricks.unittest.model.ApiKey
 import com.askfortricks.unittest.retrofit.AnimalApiService
@@ -12,20 +16,30 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableCompletableObserver
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
     val animals by lazy { MutableLiveData<List<Animal>>() }
     val loadError by lazy { MutableLiveData<Boolean>() }
     val loading by lazy { MutableLiveData<Boolean>() }
 
-    //create shared pref instance
-    val prefs = SharedPreferenceHelper(getApplication())
-
     //create disposable and release it later in onCleared
     private val disposable = CompositeDisposable()
 
+    //create shared pref instance //See PrefModule
+    @Inject
+    @field:TypeOfContext(CONTEXT_APP)
+    lateinit var  prefs : SharedPreferenceHelper
     //create api service
-    private val api = AnimalApiService()
+    @Inject
+    lateinit var api: AnimalApiService
+
+    init {
+        DaggerViewModelComponent.builder()
+            .appModule(AppModule(getApplication()))
+            .build()
+            .inject(this)
+    }
 
     fun refresh() {
         loading.value=true
