@@ -18,7 +18,17 @@ import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
+// We have taken injected var to know if viewmodel called from reallife scenarion or from test class.
+//If ListViewModel called from test then injected=true and we dont inject DaggerComponent since its a test and we have mock.
+
 class ListViewModel(application: Application) : AndroidViewModel(application) {
+
+    constructor(application: Application,test:Boolean=true):this(application){
+        injected=true
+    }
+
+    private var injected=false
+
     val animals by lazy { MutableLiveData<List<Animal>>() }
     val loadError by lazy { MutableLiveData<Boolean>() }
     val loading by lazy { MutableLiveData<Boolean>() }
@@ -34,14 +44,24 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     @Inject
     lateinit var api: AnimalApiService
 
-    init {
+    fun inject(){
+        if(!injected){
+            DaggerViewModelComponent.builder()
+                .appModule(AppModule(getApplication()))
+                .build()
+                .inject(this)
+        }
+    }
+
+    /*init {
         DaggerViewModelComponent.builder()
             .appModule(AppModule(getApplication()))
             .build()
             .inject(this)
-    }
+    }*/
 
     fun refresh() {
+        inject()
         loading.value=true
         if(prefs.getApiKey().isNullOrEmpty()){
             getKey()
@@ -53,6 +73,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
     //called from swipe refresh
     fun forceRefresh(){
+        inject()
         loading.value=true
         getKey()
     }
