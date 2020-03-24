@@ -22,28 +22,27 @@ import javax.inject.Singleton
 
 
 @Module
-class PrefsModule {
+open class PrefsModule {
 
     //creating single instance to avoid multiple instances changing the state before accessing in large scale app.
     @Provides
     @Singleton
     @TypeOfContext(CONTEXT_APP)
-    fun provideSharedPreferences(app:Application):SharedPreferenceHelper
-    {
+    open fun provideSharedPreferences(app: Application): SharedPreferenceHelper {
         return SharedPreferenceHelper(app)
     }
 
     @Provides
     @Singleton
     @TypeOfContext(CONTEXT_ACTIVITY)
-    fun provideActivitySharedPreferences(app:Application):SharedPreferenceHelper
-    {
+    open fun provideActivitySharedPreferences(app: Application): SharedPreferenceHelper {
         return SharedPreferenceHelper(app)
     }
 }
-const val CONTEXT_APP="Application Context"
-const val CONTEXT_ACTIVITY="Activity Context"
+
+const val CONTEXT_APP = "Application Context"
+const val CONTEXT_ACTIVITY = "Activity Context"
 
 @Qualifier
-annotation class TypeOfContext(val type:String)
+annotation class TypeOfContext(val type: String)
 
