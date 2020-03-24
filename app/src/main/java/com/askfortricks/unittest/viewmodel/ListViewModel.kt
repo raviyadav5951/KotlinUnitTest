@@ -28,6 +28,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private var injected=false
+    private var invalidApiKey=false
 
     val animals by lazy { MutableLiveData<List<Animal>>() }
     val loadError by lazy { MutableLiveData<Boolean>() }
@@ -63,6 +64,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     fun refresh() {
         inject()
         loading.value=true
+        invalidApiKey=false
         if(prefs.getApiKey().isNullOrEmpty()){
             getKey()
         }
@@ -125,10 +127,17 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                     }
 
                     override fun onError(e: Throwable) {
-                        loading.value=false
-                        loadError.value=true
-                        animals.value=null
-                        e.printStackTrace()
+                        if(!invalidApiKey){
+                            invalidApiKey=true
+                            getKey()
+                        }
+                        else{
+                            loading.value=false
+                            loadError.value=true
+                            animals.value=null
+                            e.printStackTrace()
+                        }
+
                     }
 
                 })
